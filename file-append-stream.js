@@ -10,7 +10,7 @@ var filename = path.join(__dirname, 'file.ldjson')
 
 //this is really fast! 500 mb a second!
 //filename = '/dev/null'
-var stream = fs.createWriteStream(filename)
+var stream = require('append-stream')(filename)
 
 var l = 0, c = 0, start = Date.now()
 var b = ''
@@ -34,13 +34,14 @@ var onDrain = pummel(1024*1024, function () {
   var _b = b
   b = ''
 
-  stream.write(_b)
   count++
   if (count === 50) {
     count = 0
+    stream.write(_b, onDrain)
     return false
   }
+  stream.write(_b)
   return true
 })
 
-stream.on('drain', onDrain)
+onDrain()
