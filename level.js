@@ -1,6 +1,10 @@
 var random = require('./random')
 var level = require('level')
 var path = require('path')
+var rimraf = require('rimraf')
+var dbdir = path.join(__dirname, 'db')
+
+rimraf.sync(dbdir)
 
 var db = level(path.join(__dirname, 'db'),
   {keyEncoding: 'ascii', valueEncoding: 'ascii'})
